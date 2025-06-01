@@ -1,3 +1,10 @@
+import {
+  useFonts,
+  Montserrat_400Regular,
+  Montserrat_500Medium,
+  Montserrat_600SemiBold,
+} from "@expo-google-fonts/montserrat";
+import { Search } from "lucide-react-native";
 import React, { useState, useEffect, useRef } from "react";
 import {
   View,
@@ -6,18 +13,9 @@ import {
   TextInput,
   StyleSheet,
   Animated,
-  Pressable,
   Image,
-  Dimensions,
   TouchableWithoutFeedback,
 } from "react-native";
-import { Search } from "lucide-react-native";
-import {
-  useFonts,
-  Montserrat_400Regular,
-  Montserrat_500Medium,
-  Montserrat_600SemiBold,
-} from "@expo-google-fonts/montserrat";
 
 type Mode = "food" | "ride";
 type HeaderState = "collapsed" | "expanded";
@@ -50,10 +48,16 @@ const ANIMATION_DURATION = 200;
 
 const TopHeader = ({
   mode = "food",
-  onModeToggle = () => {},
+  onModeToggle = (mode: Mode) => {
+    console.log("Mode toggled to:", mode);
+  },
   location = "Current Location",
-  onSearchFocus = () => {},
-  onSearchSubmit = () => {},
+  onSearchFocus = () => {
+    console.log("Search focused");
+  },
+  onSearchSubmit = (text: string) => {
+    console.log("Search submitted with:", text);
+  },
 }: TopHeaderProps) => {
   const [placeholder, setPlaceholder] = useState("");
   const [searchText, setSearchText] = useState("");
@@ -213,7 +217,7 @@ const TopHeader = ({
           style={[styles.searchContainer, { opacity: searchOpacity }]}
           pointerEvents={headerState === "expanded" ? "auto" : "none"}
         >
-          <Search size={20} color="#00E676" style={styles.searchIcon} />
+          <Search size={20} color="#00E676" />
           <TextInput
             style={styles.searchInput}
             placeholder={placeholder}
@@ -297,9 +301,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     marginTop: 12,
     marginBottom: 8,
-  },
-  searchIcon: {
-    marginRight: 8,
   },
   searchInput: {
     flex: 1,

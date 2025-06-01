@@ -1,6 +1,4 @@
-import React from "react";
-import { View, Text, Modal, TouchableOpacity, ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+// OrderReviewModal.tsx
 import {
   X,
   MapPin,
@@ -9,6 +7,10 @@ import {
   MessageSquare,
   Edit,
 } from "lucide-react-native";
+import React from "react";
+import { View, Text, Modal, TouchableOpacity, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+
 import { CartItem } from "./CartModal";
 import { DeliveryDetails } from "./DeliveryDetailsModal";
 
@@ -17,30 +19,39 @@ interface OrderReviewModalProps {
   onClose: () => void;
   onContinue: () => void;
   onEditDeliveryDetails: () => void;
-  cartItems: CartItem[];
+  cartItems?: CartItem[];
   deliveryDetails?: DeliveryDetails;
-  subtotal: number;
-  tax: number;
-  deliveryFee: number;
-  tip: number;
-  discount: number;
-  total: number;
+  /** you may still pass these in if you want custom values… */
+  tax?: number;
+  deliveryFee?: number;
+  tip?: number;
+  discount?: number;
+  total?: number;
 }
 
-const OrderReviewModal = ({
+const OrderReviewModal: React.FC<OrderReviewModalProps> = ({
   visible,
   onClose,
   onContinue,
   onEditDeliveryDetails,
-  cartItems,
+  cartItems = [],
   deliveryDetails,
-  subtotal,
-  tax,
-  deliveryFee,
-  tip,
-  discount,
+  tax = 0,
+  deliveryFee = 0,
+  tip = 0,
+  discount = 0,
+  // if total isn't passed, compute it from the below
   total,
-}: OrderReviewModalProps) => {
+}) => {
+  // compute subtotal from cartItems
+  const subtotal = cartItems.reduce((sum, item) => sum + item.total_price, 0);
+
+  // compute total if user didn't supply one
+  const computedTotal =
+    typeof total === "number"
+      ? total
+      : subtotal + tax + deliveryFee + tip - discount;
+
   return (
     <Modal
       visible={visible}
@@ -55,7 +66,7 @@ const OrderReviewModal = ({
             <X size={24} color="#FFFFFF" />
           </TouchableOpacity>
           <Text className="text-xl font-bold text-white">Order Review</Text>
-          <View style={{ width: 24 }} />
+          <View style={{ width: 24 /* placeholder for centering */ }} />
         </View>
 
         <ScrollView className="flex-1">
@@ -75,7 +86,7 @@ const OrderReviewModal = ({
             </View>
 
             <View className="flex-row items-start mb-2">
-              <MapPin size={18} color="#FF3008" style={{ marginTop: 2 }} />
+              <MapPin size={18} color="#FF3008" />
               <Text className="text-white ml-2 flex-1">
                 {deliveryDetails?.address || "123 Main Street"}
               </Text>
@@ -97,11 +108,7 @@ const OrderReviewModal = ({
 
             {deliveryDetails?.instructions && (
               <View className="flex-row items-start">
-                <MessageSquare
-                  size={18}
-                  color="#FF3008"
-                  style={{ marginTop: 2 }}
-                />
+                <MessageSquare size={18} color="#FF3008" />
                 <Text className="text-white ml-2 flex-1">
                   {deliveryDetails.instructions}
                 </Text>
@@ -121,21 +128,15 @@ const OrderReviewModal = ({
               >
                 <View className="flex-1">
                   <Text className="text-white font-medium">
-                    {item.quantity}x {item.name}
+                    {item.quantity}× {item.name}
                   </Text>
-                  {item.selected_options.map((option, index) => (
-                    <Text
-                      key={`option-${index}`}
-                      className="text-gray-400 text-sm"
-                    >
+                  {item.selected_options.map((option, i) => (
+                    <Text key={`opt-${i}`} className="text-gray-400 text-sm">
                       {option.name}
                     </Text>
                   ))}
-                  {item.add_ons.map((addon, index) => (
-                    <Text
-                      key={`addon-${index}`}
-                      className="text-gray-400 text-sm"
-                    >
+                  {item.add_ons.map((addon, i) => (
+                    <Text key={`add-${i}`} className="text-gray-400 text-sm">
                       {addon.name}
                     </Text>
                   ))}
@@ -152,34 +153,43 @@ const OrderReviewModal = ({
             <Text className="text-white font-bold text-lg mb-3">
               Order Summary
             </Text>
+
             <View className="flex-row justify-between mb-2">
               <Text className="text-gray-400">Subtotal</Text>
               <Text className="text-white">${subtotal.toFixed(2)}</Text>
             </View>
+
             <View className="flex-row justify-between mb-2">
               <Text className="text-gray-400">Tax</Text>
               <Text className="text-white">${tax.toFixed(2)}</Text>
             </View>
+
             <View className="flex-row justify-between mb-2">
               <Text className="text-gray-400">Delivery Fee</Text>
               <Text className="text-white">${deliveryFee.toFixed(2)}</Text>
             </View>
+
             {tip > 0 && (
               <View className="flex-row justify-between mb-2">
                 <Text className="text-gray-400">Tip</Text>
                 <Text className="text-white">${tip.toFixed(2)}</Text>
               </View>
             )}
+
             {discount > 0 && (
               <View className="flex-row justify-between mb-2">
                 <Text className="text-gray-400">Discount</Text>
                 <Text className="text-green-500">-${discount.toFixed(2)}</Text>
               </View>
             )}
+
             <View className="border-t border-gray-800 my-2" />
+
             <View className="flex-row justify-between">
               <Text className="text-white font-bold">Total</Text>
-              <Text className="text-white font-bold">${total.toFixed(2)}</Text>
+              <Text className="text-white font-bold">
+                ${computedTotal.toFixed(2)}
+              </Text>
             </View>
           </View>
         </ScrollView>

@@ -55,7 +55,7 @@ interface CartModalProps {
 
 const CartModal = ({
   visible,
-  cartItems,
+  cartItems = [],
   onClose,
   onUpdateQuantity,
   onRemoveItem,
