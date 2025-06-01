@@ -254,6 +254,64 @@ const FoodDeliveryHome = ({
     setShowRestaurantDetail(true);
   };
 
+  // Add missing cart handlers
+  const handleUpdateQuantity = (itemId: string, quantity: number) => {
+    setCartItems(cartItems.map(item => 
+      item.item_id === itemId 
+        ? { ...item, quantity, total_price: item.unit_price * quantity }
+        : item
+    ));
+  };
+
+  const handleRemoveItem = (itemId: string) => {
+    setCartItems(cartItems.filter(item => item.item_id !== itemId));
+  };
+
+  // Convert MenuItem + selections to CartItem
+  const convertToCartItem = (
+    item: MenuItem,
+    quantity: number,
+    selectedOptions: { [key: string]: string },
+    selectedAddons: { [key: string]: boolean }
+  ): CartItem => {
+    const selected_options = Object.entries(selectedOptions).map(([optionId, choiceId]) => {
+      const option = item.options?.find(opt => opt.id === optionId);
+      const choice = option?.choices.find(ch => ch.id === choiceId);
+      return {
+        option_id: optionId,
+        choice_id: choiceId,
+        name: choice?.name || '',
+        price: choice?.price || 0
+      };
+    });
+
+    const add_ons = Object.entries(selectedAddons)
+      .filter(([_, selected]) => selected)
+      .map(([addonId, _]) => {
+        const addon = item.addons?.find(add => add.id === addonId);
+        return {
+          addon_id: addonId,
+          name: addon?.name || '',
+          price: addon?.price || 0
+        };
+      });
+
+    const optionsTotal = selected_options.reduce((sum, opt) => sum + opt.price, 0);
+    const addonsTotal = add_ons.reduce((sum, addon) => sum + addon.price, 0);
+    const unit_price = item.price + optionsTotal + addonsTotal;
+
+    return {
+      item_id: item.id,
+      name: item.name,
+      quantity,
+      unit_price,
+      total_price: unit_price * quantity,
+      thumbnail_url: item.thumbnail_url,
+      selected_options,
+      add_ons
+    };
+  };
+
   return (
     <>
       <SafeAreaView className="flex-1 bg-dark-bg">
@@ -348,8 +406,9 @@ const FoodDeliveryHome = ({
             visible={showMenuItemDetail}
             item={selectedMenuItem}
             onClose={() => setShowMenuItemDetail(false)}
-            onAddToCart={(newItem) => {
-              setCartItems([...cartItems, newItem]);
+            onAddToCart={(item, quantity, selectedOptions, selectedAddons) => {
+              const cartItem = convertToCartItem(item, quantity, selectedOptions, selectedAddons);
+              setCartItems([...cartItems, cartItem]);
               setShowMenuItemDetail(false);
             }}
           />
@@ -358,8 +417,10 @@ const FoodDeliveryHome = ({
         {showCart && (
           <CartModal
             visible={showCart}
-            items={cartItems}
+            cartItems={cartItems}
             onClose={() => setShowCart(false)}
+            onUpdateQuantity={handleUpdateQuantity}
+            onRemoveItem={handleRemoveItem}
             onCheckout={() => {
               setShowCart(false);
               setShowDeliveryDetails(true);
@@ -399,10 +460,15 @@ const FoodDeliveryHome = ({
         <OrderReviewModal
           visible={showOrderReview}
           onClose={() => setShowOrderReview(false)}
-          onConfirm={() => {
+          onContinue={() => {
             setShowOrderReview(false);
             setShowPayment(true);
           }}
+          onEditDeliveryDetails={() => {
+            setShowOrderReview(false);
+            setShowDeliveryDetails(true);
+          }}
+          cartItems={cartItems}
         />
       )}
 
@@ -410,7 +476,7 @@ const FoodDeliveryHome = ({
         <PaymentModal
           visible={showPayment}
           onClose={() => setShowPayment(false)}
-          onPaymentComplete={() => {
+          onPlaceOrder={() => {
             setShowPayment(false);
             setShowOrderTracking(true);
           }}
