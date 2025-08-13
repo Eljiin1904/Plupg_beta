@@ -80,27 +80,27 @@ const OrderReviewModal: React.FC<OrderReviewModalProps> = ({
                 className="flex-row items-center"
                 onPress={onEditDeliveryDetails}
               >
-                <Edit size={16} color="#FF3008" />
-                <Text className="text-[#FF3008] ml-1">Edit</Text>
+                <Edit size={16} color="#00E676" />
+                <Text className="text-[#00E676] ml-1">Edit</Text>
               </TouchableOpacity>
             </View>
 
             <View className="flex-row items-start mb-2">
-              <MapPin size={18} color="#FF3008" />
+              <MapPin size={18} color="#00E676" />
               <Text className="text-white ml-2 flex-1">
                 {deliveryDetails?.address || "123 Main Street"}
               </Text>
             </View>
 
             <View className="flex-row items-center mb-2">
-              <Clock size={18} color="#FF3008" />
+              <Clock size={18} color="#00E676" />
               <Text className="text-white ml-2">
                 {deliveryDetails?.deliveryTime || "ASAP"}
               </Text>
             </View>
 
             <View className="flex-row items-center mb-2">
-              <Phone size={18} color="#FF3008" />
+              <Phone size={18} color="#00E676" />
               <Text className="text-white ml-2">
                 {deliveryDetails?.phone || "(555) 123-4567"}
               </Text>
@@ -108,7 +108,7 @@ const OrderReviewModal: React.FC<OrderReviewModalProps> = ({
 
             {deliveryDetails?.instructions && (
               <View className="flex-row items-start">
-                <MessageSquare size={18} color="#FF3008" />
+                <MessageSquare size={18} color="#00E676" />
                 <Text className="text-white ml-2 flex-1">
                   {deliveryDetails.instructions}
                 </Text>
@@ -197,7 +197,7 @@ const OrderReviewModal: React.FC<OrderReviewModalProps> = ({
         {/* Continue Button */}
         <View className="p-4 border-t border-gray-800">
           <TouchableOpacity
-            className="bg-[#FF3008] py-3 rounded-lg items-center"
+            className="bg-[#00E676] py-3 rounded-lg items-center"
             onPress={onContinue}
           >
             <Text className="text-white font-bold text-lg">

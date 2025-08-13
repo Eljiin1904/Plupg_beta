@@ -14,7 +14,7 @@ import {
   StyleSheet,
   Animated,
   Image,
-  TouchableWithoutFeedback,
+  Platform,
 } from "react-native";
 
 type Mode = "food" | "ride";
@@ -94,12 +94,23 @@ const TopHeader = ({
     setPlaceholderIndex(0);
   }, [mode]);
 
+  // Determine if we're on web or mobile
+  const isWeb = Platform.OS === "web";
+
+  const containerHeightValue = isWeb
+    ? headerHeight
+    : headerState === "expanded"
+      ? EXPANDED_HEIGHT
+      : COLLAPSED_HEIGHT;
+  const searchOpacityValue = isWeb
+    ? searchOpacity
+    : headerState === "expanded"
+      ? 1
+      : 0;
+
   const toggleHeaderState = () => {
     const now = Date.now();
-    // Debounce to prevent animation jank (300ms)
-    if (now - lastTapTime < 300) {
-      return;
-    }
+    if (now - lastTapTime < 300) return;
     setLastTapTime(now);
 
     const newState = headerState === "collapsed" ? "expanded" : "collapsed";
@@ -125,7 +136,6 @@ const TopHeader = ({
       ]).start();
     } catch (error) {
       console.error("Animation failed:", error);
-      // Revert to last stable state
       setHeaderState(headerState);
     }
   };
@@ -139,97 +149,97 @@ const TopHeader = ({
   }
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => headerState === "expanded" && toggleHeaderState()}
-    >
-      <Animated.View style={[styles.container, { height: headerHeight }]}>
-        {/* Top Row with Logo, Mode Indicator, and Search Icon */}
-        <View style={styles.topRow}>
-          {/* App Logo */}
-          <View style={styles.logoContainer}>
-            <Image
-              source={require("../../assets/images/the-plug-logo.jpg")}
-              style={styles.logo}
-              resizeMode="contain"
-            />
-          </View>
-
-          {/* Mode Indicator */}
-          <Animated.View
-            style={[
-              styles.modeIndicatorContainer,
-              {
-                transform: [
-                  {
-                    translateY:
-                      headerState === "expanded" ? 0 : toggleButtonsPosition,
-                  },
-                ],
-              },
-            ]}
-          >
-            <TouchableOpacity
-              style={[
-                styles.modeButton,
-                mode === "food" && styles.activeModeButton,
-              ]}
-              onPress={() => handleModeToggle("food")}
-            >
-              <Text
-                style={[
-                  styles.modeText,
-                  mode === "food" && styles.activeModeText,
-                ]}
-              >
-                Food
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.modeButton,
-                mode === "ride" && styles.activeModeButton,
-              ]}
-              onPress={() => handleModeToggle("ride")}
-            >
-              <Text
-                style={[
-                  styles.modeText,
-                  mode === "ride" && styles.activeModeText,
-                ]}
-              >
-                Ride
-              </Text>
-            </TouchableOpacity>
-          </Animated.View>
-
-          {/* Search Icon */}
-          <TouchableOpacity
-            style={styles.searchIconButton}
-            onPress={toggleHeaderState}
-          >
-            <Search size={24} color="#00E676" />
-          </TouchableOpacity>
+    <Animated.View style={[styles.container, { height: containerHeightValue }]}>
+      {/* Top Row with Logo, Mode Indicator, and Search Icon */}
+      <View style={styles.topRow}>
+        {/* App Logo */}
+        <View style={styles.logoContainer}>
+          <Image
+            source={require("../../assets/images/the-plug-logo.jpg")}
+            style={styles.logo}
+            resizeMode="contain"
+          />
         </View>
 
-        {/* Search Bar (only visible in expanded state) */}
+        {/* Mode Indicator */}
         <Animated.View
-          style={[styles.searchContainer, { opacity: searchOpacity }]}
-          pointerEvents={headerState === "expanded" ? "auto" : "none"}
+          style={[
+            styles.modeIndicatorContainer,
+            {
+              transform: [
+                {
+                  translateY:
+                    headerState === "expanded" ? 0 : toggleButtonsPosition,
+                },
+              ],
+            },
+          ]}
         >
-          <Search size={20} color="#00E676" />
-          <TextInput
-            style={styles.searchInput}
-            placeholder={placeholder}
-            placeholderTextColor="#999999"
-            value={searchText}
-            onChangeText={setSearchText}
-            onFocus={onSearchFocus}
-            onSubmitEditing={() => onSearchSubmit(searchText)}
-          />
+          <TouchableOpacity
+            style={[
+              styles.modeButton,
+              mode === "food" && styles.activeModeButton,
+            ]}
+            onPress={() => handleModeToggle("food")}
+          >
+            <Text
+              style={[
+                styles.modeText,
+                mode === "food" && styles.activeModeText,
+              ]}
+            >
+              Food
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.modeButton,
+              mode === "ride" && styles.activeModeButton,
+            ]}
+            onPress={() => handleModeToggle("ride")}
+          >
+            <Text
+              style={[
+                styles.modeText,
+                mode === "ride" && styles.activeModeText,
+              ]}
+            >
+              Ride
+            </Text>
+          </TouchableOpacity>
         </Animated.View>
+
+        {/* Search Icon */}
+        <TouchableOpacity
+          style={styles.searchIconButton}
+          onPress={() => {
+            console.log("Search icon onPress fired on mobile");
+            toggleHeaderState();
+          }}
+          hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
+        >
+          <Search size={24} color="#00E676" />
+        </TouchableOpacity>
+      </View>
+
+      {/* Search Bar (only visible in expanded state) */}
+      <Animated.View
+        style={[styles.searchContainer, { opacity: searchOpacityValue }]}
+        pointerEvents={headerState === "expanded" ? "auto" : "none"}
+      >
+        <Search size={20} color="#00E676" />
+        <TextInput
+          style={styles.searchInput}
+          placeholder={placeholder}
+          placeholderTextColor="#999999"
+          value={searchText}
+          onChangeText={setSearchText}
+          onFocus={onSearchFocus}
+          onSubmitEditing={() => onSearchSubmit(searchText)}
+        />
       </Animated.View>
-    </TouchableWithoutFeedback>
+    </Animated.View>
   );
 };
 

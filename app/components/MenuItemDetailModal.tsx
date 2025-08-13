@@ -173,12 +173,12 @@ const MenuItemDetailModal = ({
                   <Text className="text-white font-bold mb-2">
                     {option.name}{" "}
                     {option.required && (
-                      <Text className="text-[#FF3008]">*</Text>
+                      <Text className="text-[#00E676]">*</Text>
                     )}
                   </Text>
 
                   {!selectedOptions[option.id] && option.required && (
-                    <Text className="text-[#FF3008] text-sm mb-2">
+                    <Text className="text-[#00E676] text-sm mb-2">
                       Please select an option
                     </Text>
                   )}
@@ -262,7 +262,7 @@ const MenuItemDetailModal = ({
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
-                className={`py-3 px-4 rounded-lg flex-row justify-center items-center ${canAddToCart ? "bg-[#FF3008]" : "bg-gray-700"}`}
+                className={`py-3 px-4 rounded-lg flex-row justify-center items-center ${canAddToCart ? "bg-[#00E676]" : "bg-gray-700"}`}
                 onPress={canAddToCart ? handleAddToCart : undefined}
                 disabled={!canAddToCart}
               >

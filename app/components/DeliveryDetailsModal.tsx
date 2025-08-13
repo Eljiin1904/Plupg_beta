@@ -107,12 +107,12 @@ const DeliveryDetailsModal = ({
           {/* Delivery Address */}
           <View className="mb-6">
             <Text className="text-white font-bold mb-2">
-              Delivery Address <Text className="text-[#FF3008]">*</Text>
+              Delivery Address <Text className="text-[#00E676]">*</Text>
             </Text>
             <View
               className={`flex-row items-center bg-gray-800 p-3 rounded-lg ${errors.address ? "border border-red-500" : ""}`}
             >
-              <MapPin size={20} color="#FF3008" />
+              <MapPin size={20} color="#00E676" />
               <TextInput
                 className="flex-1 text-white ml-2"
                 placeholder="Enter your address"
@@ -137,11 +137,11 @@ const DeliveryDetailsModal = ({
                   onPress={() => setDeliveryTime(option)}
                 >
                   <View className="flex-row items-center">
-                    <Clock size={20} color="#FF3008" />
+                    <Clock size={20} color="#00E676" />
                     <Text className="text-white ml-2">{option}</Text>
                   </View>
                   {deliveryTime === option && (
-                    <View className="h-4 w-4 rounded-full bg-[#FF3008]" />
+                    <View className="h-4 w-4 rounded-full bg-[#00E676]" />
                   )}
                 </TouchableOpacity>
               ))}
@@ -151,12 +151,12 @@ const DeliveryDetailsModal = ({
           {/* Phone Number */}
           <View className="mb-6">
             <Text className="text-white font-bold mb-2">
-              Phone Number <Text className="text-[#FF3008]">*</Text>
+              Phone Number <Text className="text-[#00E676]">*</Text>
             </Text>
             <View
               className={`flex-row items-center bg-gray-800 p-3 rounded-lg ${errors.phone ? "border border-red-500" : ""}`}
             >
-              <Phone size={20} color="#FF3008" />
+              <Phone size={20} color="#00E676" />
               <TextInput
                 className="flex-1 text-white ml-2"
                 placeholder="Enter your phone number"
@@ -179,7 +179,7 @@ const DeliveryDetailsModal = ({
             </Text>
             <View className="bg-gray-800 p-3 rounded-lg">
               <View className="flex-row items-start">
-                <MessageSquare size={20} color="#FF3008" />
+                <MessageSquare size={20} color="#00E676" />
                 <TextInput
                   className="flex-1 text-white ml-2"
                   placeholder="Add instructions for delivery (gate code, landmarks, etc.)"
@@ -198,7 +198,7 @@ const DeliveryDetailsModal = ({
         {/* Continue Button */}
         <View className="p-4 border-t border-gray-800">
           <TouchableOpacity
-            className="bg-[#FF3008] py-3 rounded-lg items-center"
+            className="bg-[#00E676] py-3 rounded-lg items-center"
             onPress={handleContinue}
           >
             <Text className="text-white font-bold text-lg">Continue</Text>

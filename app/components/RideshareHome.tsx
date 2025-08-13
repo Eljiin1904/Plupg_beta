@@ -39,6 +39,7 @@ import {
 
 // Import the TopHeader component
 import TopHeader from "./TopHeader";
+import RoadsideScreen from "./RoadsideScreen";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -59,12 +60,12 @@ interface ServiceOption {
   price: string;
   eta: string;
   description: string;
-  image: string;
+  image: any; // Allow both string and require()
 }
 
 interface Promotion {
   id: string;
-  image: string;
+  image: any; // Allow both string and require()
   headline: string;
   cta_text: string;
 }
@@ -74,14 +75,14 @@ interface TripCard {
   icon: React.ReactNode;
   title: string;
   subtitle: string;
-  image: string;
+  image: any; // Allow both string and require()
 }
 
 interface Shortcut {
   id: string;
   icon: React.ReactNode;
   label: string;
-  image: string;
+  image: any; // Allow both string and require()
 }
 
 interface SavedLocation {
@@ -100,12 +101,27 @@ interface RideshareHomeProps {
   onModeChange?: (mode: "ride" | "roadside" | "food") => void;
 }
 
-const ShortcutCard = ({ shortcut }: { shortcut: Shortcut }) => {
+const ShortcutCard = ({
+  shortcut,
+  onPress,
+}: {
+  shortcut: Shortcut;
+  onPress: (id: string) => void;
+}) => {
+  // FIX: Conditionally set the image source for local (require) vs remote (uri) assets.
+  const imageSource =
+    typeof shortcut.image === "string"
+      ? { uri: shortcut.image }
+      : shortcut.image;
+
   return (
-    <TouchableOpacity className="mr-4 items-center">
+    <TouchableOpacity
+      className="mr-4 items-center"
+      onPress={() => onPress(shortcut.id)}
+    >
       <View className="w-20 h-20 rounded-xl overflow-hidden bg-dark-card shadow-sm">
         <Image
-          source={{ uri: shortcut.image }}
+          source={imageSource}
           className="w-full h-full"
           contentFit="cover"
         />
@@ -118,11 +134,15 @@ const ShortcutCard = ({ shortcut }: { shortcut: Shortcut }) => {
 };
 
 const ServiceCard = ({ service }: { service: ServiceOption }) => {
+  // FIX: Conditionally set the image source for local (require) vs remote (uri) assets.
+  const imageSource =
+    typeof service.image === "string" ? { uri: service.image } : service.image;
+
   return (
     <TouchableOpacity className="w-[48%] mb-4">
       <View className="rounded-xl overflow-hidden bg-dark-card shadow-sm">
         <Image
-          source={{ uri: service.image }}
+          source={imageSource}
           className="w-full h-32"
           contentFit="cover"
         />
@@ -142,11 +162,15 @@ const ServiceCard = ({ service }: { service: ServiceOption }) => {
 };
 
 const PromotionCard = ({ promo }: { promo: Promotion }) => {
+  // FIX: Conditionally set the image source for local (require) vs remote (uri) assets.
+  const imageSource =
+    typeof promo.image === "string" ? { uri: promo.image } : promo.image;
+
   return (
     <TouchableOpacity className="mr-4">
       <View className="w-64 h-36 rounded-xl overflow-hidden bg-dark-card shadow-sm">
         <Image
-          source={{ uri: promo.image }}
+          source={imageSource}
           className="w-full h-full"
           contentFit="cover"
         />
@@ -166,11 +190,15 @@ const PromotionCard = ({ promo }: { promo: Promotion }) => {
 };
 
 const TripPlanCard = ({ card }: { card: TripCard }) => {
+  // FIX: Conditionally set the image source for local (require) vs remote (uri) assets.
+  const imageSource =
+    typeof card.image === "string" ? { uri: card.image } : card.image;
+
   return (
     <TouchableOpacity className="mr-4">
       <View className="w-40 h-28 rounded-xl overflow-hidden bg-dark-card shadow-sm">
         <Image
-          source={{ uri: card.image }}
+          source={imageSource}
           className="w-full h-full"
           contentFit="cover"
         />
@@ -220,15 +248,25 @@ const RideshareHome = ({
       id: "ride",
       icon: <Car size={24} color="#4AFF00" />,
       label: "Ride Share",
-      image:
-        "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=400&q=80",
+      image: require("../../assets/sedan1.png"),
     },
     {
       id: "roadside",
       icon: <Truck size={24} color="#4AFF00" />,
       label: "Road Side",
-      image:
-        "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&q=80",
+      image: require("../../assets/towtruck1.png"),
+    },
+    {
+      id: "reserve",
+      icon: <Calendar size={24} color="#4AFF00" />,
+      label: "Reserve",
+      image: require("../../assets/calendar1.png"),
+    },
+    {
+      id: "rental",
+      icon: <Car size={24} color="#4AFF00" />,
+      label: "Rental",
+      image: require("../../assets/hands.png"),
     },
     {
       id: "food",
@@ -236,20 +274,6 @@ const RideshareHome = ({
       label: "Food",
       image:
         "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300&q=80",
-    },
-    {
-      id: "reserve",
-      icon: <Calendar size={24} color="#4AFF00" />,
-      label: "Reserve",
-      image:
-        "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=400&q=80",
-    },
-    {
-      id: "rental",
-      icon: <Car size={24} color="#4AFF00" />,
-      label: "Rental",
-      image:
-        "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=400&q=80",
     },
   ];
 
@@ -292,12 +316,11 @@ const RideshareHome = ({
     {
       id: "lux",
       name: "LUX Ride Share",
-      icon: <Car size={24} color="#4AFF00" />,
+      icon: <Car size={20} color="#4AFF00" />,
       price: "$24.75",
       eta: "5 min",
       description: "Rides Starting –",
-      image:
-        "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&q=80",
+      image: require("../../assets/Luxrideshare.png"),
     },
     {
       id: "tow",
@@ -306,8 +329,7 @@ const RideshareHome = ({
       price: "$79.99",
       eta: "25 min",
       description: "Tows Starting –",
-      image:
-        "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&q=80",
+      image: require("../../assets/roadside.png"),
     },
     {
       id: "rental",
@@ -316,8 +338,7 @@ const RideshareHome = ({
       price: "$24.75",
       eta: "15 min",
       description: "Rides Starting –",
-      image:
-        "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=400&q=80",
+      image: require("../../assets/carrental.png"),
     },
     {
       id: "flat",
@@ -326,8 +347,7 @@ const RideshareHome = ({
       price: "$24.75",
       eta: "18 min",
       description: "Rides Starting –",
-      image:
-        "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=400&q=80",
+      image: require("../../assets/flattire.png"),
     },
   ];
 
@@ -349,15 +369,13 @@ const RideshareHome = ({
     },
     {
       id: "promo3",
-      image:
-        "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&q=80",
+      image: require("../../assets/Luxrideshare.png"),
       headline: "Try our LUX service",
       cta_text: "Learn More",
     },
     {
       id: "promo4",
-      image:
-        "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&q=80",
+      image: require("../../assets/rideshare.png"),
       headline: "Refer a friend, get $50",
       cta_text: "Share Now",
     },
@@ -386,8 +404,7 @@ const RideshareHome = ({
       icon: <Briefcase size={24} color="#4AFF00" />,
       title: "Business travel",
       subtitle: "Manage work expenses",
-      image:
-        "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=400&q=80",
+      image: require("../../assets/luxrideshare2.png"),
     },
   ];
 
@@ -436,6 +453,19 @@ const RideshareHome = ({
           { text: "Retry", onPress: () => handleTabChange(tab) },
         ],
       );
+    }
+  };
+
+  // Handle shortcut selection
+  const handleShortcutSelect = (shortcutId: string) => {
+    if (shortcutId === "roadside") {
+      onModeChange("roadside");
+      setCurrentTab("services");
+    } else if (shortcutId === "food") {
+      onModeChange("food");
+    } else if (shortcutId === "ride") {
+      onModeChange("ride");
+      setCurrentTab("home");
     }
   };
 
@@ -570,7 +600,11 @@ const RideshareHome = ({
           className="px-4 py-2"
         >
           {shortcuts.map((shortcut) => (
-            <ShortcutCard key={shortcut.id} shortcut={shortcut} />
+            <ShortcutCard
+              key={shortcut.id}
+              shortcut={shortcut}
+              onPress={handleShortcutSelect}
+            />
           ))}
         </ScrollView>
       </View>
@@ -685,7 +719,11 @@ const RideshareHome = ({
           className="pb-2"
         >
           {shortcuts.map((shortcut) => (
-            <ShortcutCard key={shortcut.id} shortcut={shortcut} />
+            <ShortcutCard
+              key={shortcut.id}
+              shortcut={shortcut}
+              onPress={handleShortcutSelect}
+            />
           ))}
         </ScrollView>
       </View>
@@ -1003,7 +1041,20 @@ const RideshareHome = ({
           renderRideHomeScreen()}
 
         {/* Roadside Assistance Screen */}
-        {mode === "roadside" && renderRoadsideScreen()}
+        {mode === "roadside" && currentTab === "services" && (
+          <RoadsideScreen
+            userLocation={userLocation}
+            onBack={() => {
+              onModeChange("ride");
+              setCurrentTab("home");
+            }}
+          />
+        )}
+
+        {/* Legacy Roadside Screen */}
+        {mode === "roadside" &&
+          currentTab !== "services" &&
+          renderRoadsideScreen()}
 
         {/* Search Overlay */}
         {renderSearchOverlay()}

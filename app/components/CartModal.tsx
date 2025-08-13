@@ -140,7 +140,7 @@ const CartModal = ({
           <View className="flex-1 justify-center items-center p-4">
             <Text className="text-white text-lg mb-4">Your cart is empty</Text>
             <TouchableOpacity
-              className="bg-[#FF3008] py-3 px-6 rounded-lg"
+              className="bg-[#00E676] py-3 px-6 rounded-lg"
               onPress={onClose}
             >
               <Text className="text-white font-bold">Browse Restaurants</Text>
@@ -171,7 +171,7 @@ const CartModal = ({
                         <TouchableOpacity
                           onPress={() => handleRemoveItem(item.item_id)}
                         >
-                          <Trash2 size={18} color="#FF3008" />
+                          <Trash2 size={18} color="#00E676" />
                         </TouchableOpacity>
                       </View>
 
@@ -239,7 +239,7 @@ const CartModal = ({
                     onChangeText={setPromoCode}
                   />
                   <TouchableOpacity
-                    className="bg-[#FF3008] px-4 justify-center rounded-r-lg"
+                    className="bg-[#00E676] px-4 justify-center rounded-r-lg"
                     onPress={handleApplyPromo}
                   >
                     <Text className="text-white font-bold">Apply</Text>
@@ -262,7 +262,7 @@ const CartModal = ({
                   {[0, 10, 15, 20, 25].map((percentage) => (
                     <TouchableOpacity
                       key={`tip-${percentage}`}
-                      className={`py-2 px-4 rounded-lg ${tipPercentage === percentage ? "bg-[#FF3008]" : "bg-gray-800"}`}
+                      className={`py-2 px-4 rounded-lg ${tipPercentage === percentage ? "bg-[#00E676]" : "bg-gray-800"}`}
                       onPress={() => setTipPercentage(percentage)}
                     >
                       <Text
@@ -319,7 +319,7 @@ const CartModal = ({
             {/* Checkout Button */}
             <View className="p-4 border-t border-gray-800">
               <TouchableOpacity
-                className="bg-[#FF3008] py-3 rounded-lg items-center"
+                className="bg-[#00E676] py-3 rounded-lg items-center"
                 onPress={handleCheckout}
               >
                 <Text className="text-white font-bold text-lg">

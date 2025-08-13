@@ -126,7 +126,7 @@ const PaymentModal = ({
                   </View>
                 </View>
                 {selectedPaymentMethod === method.id && (
-                  <View className="h-6 w-6 rounded-full bg-[#FF3008] items-center justify-center">
+                  <View className="h-6 w-6 rounded-full bg-[#00E676] items-center justify-center">
                     <Check size={16} color="#FFFFFF" />
                   </View>
                 )}
@@ -142,10 +142,10 @@ const PaymentModal = ({
                 )
               }
             >
-              <View className="h-6 w-6 rounded-full border border-[#FF3008] items-center justify-center mr-3">
-                <Text className="text-[#FF3008] font-bold">+</Text>
+              <View className="h-6 w-6 rounded-full border border-[#00E676] items-center justify-center mr-3">
+                <Text className="text-[#00E676] font-bold">+</Text>
               </View>
-              <Text className="text-[#FF3008] font-medium">
+              <Text className="text-[#00E676] font-medium">
                 Add New Payment Method
               </Text>
             </TouchableOpacity>
@@ -163,7 +163,7 @@ const PaymentModal = ({
               editable={!promoApplied}
             />
             <TouchableOpacity
-              className={`px-4 justify-center rounded-r-lg ${promoApplied ? "bg-green-600" : "bg-[#FF3008]"}`}
+              className={`px-4 justify-center rounded-r-lg ${promoApplied ? "bg-green-600" : "bg-[#00E676]"}}`}
               onPress={handleApplyPromo}
               disabled={promoApplied}
             >
@@ -203,7 +203,7 @@ const PaymentModal = ({
         {/* Place Order Button */}
         <View className="p-4 border-t border-gray-800">
           <TouchableOpacity
-            className={`py-3 rounded-lg items-center ${isProcessing || !selectedPaymentMethod ? "bg-gray-700" : "bg-[#FF3008]"}`}
+            className={`py-3 rounded-lg items-center ${isProcessing || !selectedPaymentMethod ? "bg-gray-700" : "bg-[#00E676]"}}`}
             onPress={handlePlaceOrder}
             disabled={isProcessing || !selectedPaymentMethod}
           >

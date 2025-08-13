@@ -493,7 +493,7 @@ const OrderTrackingModal = ({
                       outputRange: ["0%", "100%"],
                     }),
                     height: "100%",
-                    backgroundColor: "#FF3008",
+                    backgroundColor: "#00E676",
                     borderRadius: 4,
                   }}
                 />
@@ -551,7 +551,7 @@ const OrderTrackingModal = ({
                     {status}
                   </Text>
                   {index === currentStatus && (
-                    <Text className="text-[#FF3008] text-sm mt-1">
+                    <Text className="text-[#00E676] text-sm mt-1">
                       {index < statuses.length - 1
                         ? "In progress..."
                         : "Completed"}

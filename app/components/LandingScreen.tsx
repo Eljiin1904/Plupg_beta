@@ -6,11 +6,12 @@ import {
   StyleSheet,
   Animated,
 } from "react-native";
-import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { Car, UtensilsCrossed } from "lucide-react-native";
 import { useColorScheme } from "nativewind";
 import * as Haptics from "expo-haptics";
+import MobileImageComponent from "./MobileImageComponent";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface LandingScreenProps {
   onModeSelect?: (mode: "food" | "ride") => void;
@@ -21,67 +22,78 @@ export default function LandingScreen({
 }: LandingScreenProps) {
   const router = useRouter();
   const { colorScheme } = useColorScheme();
-  const foodButtonScale = useRef(new Animated.Value(1)).current;
-  const rideButtonScale = useRef(new Animated.Value(1)).current;
+  const foodButtonScale = useRef(new Animated.Value(0.9)).current;
+  const rideButtonScale = useRef(new Animated.Value(0.9)).current;
 
-  const animateButton = (buttonScale: Animated.Value) => {
-    // Trigger haptic feedback
+  const handleSelectFood = async () => {
     try {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch((e) => {
-        console.warn("Haptic feedback error:", e);
-      });
+      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     } catch (e) {
-      console.warn("Error with haptics:", e);
+      console.warn("Haptic feedback error:", e);
     }
 
-    // Button press animation
     Animated.sequence([
-      Animated.timing(buttonScale, {
-        toValue: 0.95,
-        duration: 80,
+      Animated.timing(foodButtonScale, {
+        toValue: 0.85,
+        duration: 100,
         useNativeDriver: true,
       }),
-      Animated.timing(buttonScale, {
-        toValue: 1,
-        duration: 80,
+      Animated.timing(foodButtonScale, {
+        toValue: 0.9,
+        duration: 100,
         useNativeDriver: true,
       }),
     ]).start();
-  };
 
-  const handleSelectFood = () => {
-    animateButton(foodButtonScale);
     onModeSelect("food");
   };
 
-  const handleSelectRide = () => {
-    animateButton(rideButtonScale);
+  const handleSelectRide = async () => {
+    try {
+      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    } catch (e) {
+      console.warn("Haptic feedback error:", e);
+    }
+
+    Animated.sequence([
+      Animated.timing(rideButtonScale, {
+        toValue: 0.85,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(rideButtonScale, {
+        toValue: 0.9,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
     onModeSelect("ride");
   };
 
   return (
-    <View
-      className={`flex-1 ${colorScheme === "dark" ? "bg-dark-bg" : "bg-white"} p-6 justify-center items-center`}
-    >
+    <SafeAreaView className="flex-1 bg-dark-bg items-center justify-center">
       {/* Logo and App Name */}
-      <View className="items-center mb-12">
-        <Image
+      <View className="items-center mb-6">
+        <MobileImageComponent
           source={require("../../assets/images/the-plug-logo.jpg")}
-          className="w-36 h-36 mb-4"
+          className="w-32 h-32 mb-3"
+          style={{ width: 384, height: 384 }}
           contentFit="contain"
+          showLoadingIndicator={true}
         />
+
         <Text
-          className={`text-3xl font-bold ${colorScheme === "dark" ? "text-white" : "text-gray-900"}`}
+          className={`text-lg font-semibold ${colorScheme === "dark" ? "text-white" : "text-gray-800"} text-center mb-1`}
         >
-          The Plug
+          Delivery
         </Text>
         <Text
-          className={`text-base ${colorScheme === "dark" ? "text-gray-300" : "text-gray-600"} mt-2 text-center`}
+          className={`text-base ${colorScheme === "dark" ? "text-gray-300" : "text-gray-600"} text-center`}
         >
-          Your all-in-one delivery solution
+          Your all in one delivery solution
         </Text>
       </View>
-
       {/* Mode Selection Buttons */}
       <View className="w-full space-y-4">
         <Animated.View style={{ transform: [{ scale: foodButtonScale }] }}>
@@ -94,7 +106,7 @@ export default function LandingScreen({
             <View>
               <Text className="text-white text-2xl font-bold mb-1">Food</Text>
               <Text className="text-white opacity-90">
-                Restaurants, groceries, alcohol & more
+                Restaurants, Groceries, Alcohol & More
               </Text>
             </View>
             <UtensilsCrossed size={32} color="white" />
@@ -111,14 +123,13 @@ export default function LandingScreen({
             <View>
               <Text className="text-white text-2xl font-bold mb-1">Auto</Text>
               <Text className="text-white opacity-90">
-                Rideshare & roadside assistance
+                Rideshare & Roadside Assistance
               </Text>
             </View>
-            <Car size={32} color="white" />
+            <Car size={32} color="grey" />
           </TouchableOpacity>
         </Animated.View>
       </View>
-
       {/* Terms and Privacy */}
       <View className="mt-12">
         <Text
@@ -130,7 +141,7 @@ export default function LandingScreen({
           <Text className="text-plug-green font-medium">Privacy Policy</Text>
         </Text>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

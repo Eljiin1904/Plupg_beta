@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
-import { View, Text, StyleSheet, Animated } from "react-native";
-import { Image } from "expo-image";
 import * as Haptics from "expo-haptics";
 import { useColorScheme } from "nativewind";
+import React, { useEffect } from "react";
+import { View, Text, StyleSheet, Animated } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+import MobileImageComponent from "./MobileImageComponent";
 
 interface SplashScreenProps {
   onFinish: () => void;
@@ -40,6 +42,7 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
       ]),
       // Hold for a moment
       Animated.delay(800), // Reduced delay
+      Animated.delay(2000), // Added extra 2s hold before fading out
       // Fade out
       Animated.timing(fadeAnim, {
         toValue: 0,
@@ -53,27 +56,26 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
   }, []);
 
   return (
-    <View className="flex-1 bg-dark-bg items-center justify-center">
+    <SafeAreaView className="flex-1 bg-dark-bg items-center justify-center">
       <Animated.View
         style={{
           opacity: fadeAnim,
           transform: [{ scale: scaleAnim }],
         }}
-        className="items-center"
+        className="flex-1 items-center justify-center"
       >
-        <Image
+        <MobileImageComponent
           source={require("../../assets/images/the-plug-logo.jpg")}
-          className="w-48 h-48 mb-6"
+          className="w-96 h-96"
+          style={{ width: 384, height: 384 }}
           contentFit="contain"
+          showLoadingIndicator={false}
         />
-        <Text className="text-4xl font-bold text-white text-center">
-          The Plug
-        </Text>
-        <Text className="text-xl text-white mt-2 text-center">Delivery</Text>
-        <Text className="text-sm text-gray-300 mt-4 text-center">
+        <Text className="text-xl text-white text-center -mt-32">Delivery</Text>
+        <Text className="text-sm text-gray-300 text-center -mt-1">
           Your all in one delivery solution
         </Text>
       </Animated.View>
-    </View>
+    </SafeAreaView>
   );
 }
