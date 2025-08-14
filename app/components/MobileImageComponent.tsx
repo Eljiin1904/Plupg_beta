@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, ActivityIndicator, Platform } from "react-native";
+// components/MobileImageComponent.tsx
+
+import React, { useState, useCallback } from "react";
+import { View, Image as RNImage, ActivityIndicator, Platform } from "react-native";
 import { Image as ExpoImage } from "expo-image";
-import { Image as RNImage } from "react-native";
-import { Asset } from "expo-asset";
+import { images } from '../assets';
 
 interface MobileImageComponentProps {
   source: any;
@@ -14,7 +15,9 @@ interface MobileImageComponentProps {
   onError?: () => void;
   onLoad?: () => void;
   retryCount?: number;
-  [key: string]: any;
+  cachePolicy?: "none" | "disk" | "memory" | "memory-disk";
+  transition?: number;
+  placeholder?: any;
 }
 
 const MobileImageComponent: React.FC<MobileImageComponentProps> = ({
@@ -27,170 +30,113 @@ const MobileImageComponent: React.FC<MobileImageComponentProps> = ({
   onError,
   onLoad,
   retryCount = 2,
+  cachePolicy = "memory-disk",
+  transition = 300,
+  placeholder,
   ...props
 }) => {
-  const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [retries, setRetries] = useState(0);
-  const [mounted, setMounted] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  const [retryAttempt, setRetryAttempt] = useState(0);
 
-  // Default fallback to app logo
-  const defaultFallback = require("../../assets/images/the-plug-logo.jpg");
+  // Default fallback - update path to match your project structure
+  const defaultFallback = images.plugLogo;
 
-  useEffect(() => {
-    setMounted(true);
-    return () => setMounted(false);
-  }, []);
-
-  const handleImageError = async () => {
-    if (!mounted) return;
-
-    console.warn(
-      "Image failed to load:",
-      source?.uri || source || "unknown source",
-    );
-
-    if (retries < retryCount) {
-      setRetries((prev) => prev + 1);
-      setIsLoading(true);
-      setImageError(false);
-      return;
-    }
-
-    setImageError(true);
-    setIsLoading(false);
-    onError?.();
+  // Normalize source
+  const normalizeSource = (src: any) => {
+    if (!src) return null;
+    
+    // If it's already a require() call (number on mobile)
+    if (typeof src === "number") return src;
+    
+    // If it's a string URL
+    if (typeof src === "string") return { uri: src };
+    
+    // If it's an object with uri
+    if (typeof src === "object" && src.uri) return src;
+    
+    // If it's a require() object
+    if (typeof src === "object" && !src.uri) return src;
+    
+    return src;
   };
 
-  const handleImageLoad = () => {
-    if (!mounted) return;
+  const normalizedSource = normalizeSource(source);
+  const isRemoteImage = normalizedSource && normalizedSource.uri;
+
+  const handleImageError = useCallback(() => {
+    console.log("Image load error:", normalizedSource);
+    
+    if (retryAttempt < retryCount && isRemoteImage) {
+      setTimeout(() => {
+        setRetryAttempt(prev => prev + 1);
+      }, 1000);
+    } else {
+      setHasError(true);
+      setIsLoading(false);
+      onError?.();
+    }
+  }, [retryAttempt, retryCount, onError, isRemoteImage, normalizedSource]);
+
+  const handleImageLoad = useCallback(() => {
     setIsLoading(false);
-    setRetries(0);
+    setHasError(false);
     onLoad?.();
-  };
+  }, [onLoad]);
 
-  // Improved source detection logic
-  const isLocalAsset =
-    source &&
-    typeof source === "object" &&
-    !source.uri &&
-    (typeof source === "number" || source.__packager_asset);
-
-  const isExternalURL =
-    source &&
-    (typeof source === "string" ||
-      (typeof source === "object" &&
-        source.uri &&
-        typeof source.uri === "string"));
-
-  // Use fallback if image failed to load
-  if (imageError) {
+  // If error occurred, show fallback
+  if (hasError) {
     const fallback = fallbackSource || defaultFallback;
-
     return (
-      <RNImage
-        source={fallback}
-        style={[{ width: "100%", height: "100%" }, style]}
-        resizeMode={contentFit}
-        onError={() => console.warn("Fallback image failed to load")}
-        {...props}
-      />
-    );
-  }
-
-  // Local assets: Use React Native Image (more reliable on mobile)
-  if (isLocalAsset) {
-    if (Platform.OS === "web") {
-      try {
-        const resolvedAsset = Asset.fromModule(source).uri;
-        if (resolvedAsset) {
-          return (
-            <ExpoImage
-              source={{ uri: resolvedAsset }}
-              className={className}
-              style={style}
-              contentFit={contentFit}
-              onError={handleImageError}
-              onLoad={handleImageLoad}
-              cachePolicy="memory-disk"
-              {...props}
-            />
-          );
-        }
-      } catch (error) {
-        console.warn("Failed to resolve web asset:", error);
-        return (
-          <View
-            className={className}
-            style={[
-              {
-                width: "100%",
-                height: "100%",
-                backgroundColor: "#222",
-                alignItems: "center",
-                justifyContent: "center",
-              },
-              style,
-            ]}
-          >
-            <Text style={{ color: "#888", fontSize: 12, textAlign: "center" }}>
-              Image not available on web
-            </Text>
-          </View>
-        );
-      }
-    }
-
-    return (
-      <RNImage
-        source={source}
-        style={[{ width: "100%", height: "100%" }, style]}
-        resizeMode={contentFit}
-        onError={handleImageError}
-        onLoad={handleImageLoad}
-        {...props}
-      />
-    );
-  }
-
-  // External URLs: Use expo-image with mobile optimizations
-  if (isExternalURL) {
-    return (
-      <View className="relative">
+      <View style={[{ overflow: 'hidden' }, style]} className={className}>
         <ExpoImage
-          source={typeof source === "string" ? { uri: source } : source}
-          className={className}
-          style={style}
+          source={normalizeSource(fallback)}
+          style={{ width: '100%', height: '100%' }}
           contentFit={contentFit}
-          onError={handleImageError}
-          onLoad={handleImageLoad}
-          transition={300}
-          cachePolicy="memory-disk"
-          placeholder={{ blurhash: "L6PZfSi_.AyE_3t7t7R**0o#DgR4" }}
+          transition={transition}
           {...props}
         />
-        {isLoading && showLoadingIndicator && (
-          <View className="absolute inset-0 items-center justify-center bg-gray-800/50">
-            <ActivityIndicator size="small" color="#4AFF00" />
-          </View>
-        )}
       </View>
     );
   }
 
-  // Emergency fallback: Use default logo
-  console.warn(
-    "MobileImageComponent: Using emergency fallback for source:",
-    source,
-  );
+  // Ensure we have proper dimensions
+  const imageStyle = {
+    width: '100%',
+    height: '100%',
+    ...style
+  };
+
+  // Always use ExpoImage for consistency
   return (
-    <RNImage
-      source={defaultFallback}
-      style={[{ width: "100%", height: "100%" }, style]}
-      resizeMode={contentFit}
-      onError={() => console.warn("Emergency fallback failed to load")}
-      {...props}
-    />
+    <View style={[{ overflow: 'hidden' }, style]} className={className}>
+      {showLoadingIndicator && isLoading && (
+        <View style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1,
+        }}>
+          <ActivityIndicator size="small" color="#10b981" />
+        </View>
+      )}
+      
+      <ExpoImage
+        source={normalizedSource}
+        style={imageStyle}
+        contentFit={contentFit}
+        onError={handleImageError}
+        onLoad={handleImageLoad}
+        transition={transition}
+        cachePolicy={cachePolicy}
+        placeholder={placeholder || { blurhash: "L6PZfSi_.AyE_3t7t7R**0o#DgR4" }}
+        {...props}
+      />
+    </View>
   );
 };
 

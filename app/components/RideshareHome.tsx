@@ -11,7 +11,6 @@ import {
   Modal,
   Alert,
 } from "react-native";
-import { Image } from "expo-image";
 import { StatusBar } from "expo-status-bar";
 import {
   MapPin,
@@ -40,6 +39,7 @@ import {
 // Import the TopHeader component
 import TopHeader from "./TopHeader";
 import RoadsideScreen from "./RoadsideScreen";
+import MobileImageComponent from "./MobileImageComponent";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -120,10 +120,12 @@ const ShortcutCard = ({
       onPress={() => onPress(shortcut.id)}
     >
       <View className="w-20 h-20 rounded-xl overflow-hidden bg-dark-card shadow-sm">
-        <Image
+        <MobileImageComponent
           source={imageSource}
           className="w-full h-full"
+          style={{ width: "100%", height: "100%" }}
           contentFit="cover"
+          showLoadingIndicator={true}
         />
       </View>
       <Text className="text-center mt-1 font-medium text-sm text-white">
@@ -141,10 +143,12 @@ const ServiceCard = ({ service }: { service: ServiceOption }) => {
   return (
     <TouchableOpacity className="w-[48%] mb-4">
       <View className="rounded-xl overflow-hidden bg-dark-card shadow-sm">
-        <Image
+        <MobileImageComponent
           source={imageSource}
           className="w-full h-32"
+          style={{ width: "100%", height: 128 }}
           contentFit="cover"
+          showLoadingIndicator={true}
         />
         <View className="p-3">
           <Text className="text-base font-bold text-white">{service.name}</Text>
@@ -169,10 +173,12 @@ const PromotionCard = ({ promo }: { promo: Promotion }) => {
   return (
     <TouchableOpacity className="mr-4">
       <View className="w-64 h-36 rounded-xl overflow-hidden bg-dark-card shadow-sm">
-        <Image
+        <MobileImageComponent
           source={imageSource}
           className="w-full h-full"
+          style={{ width: "100%", height: "100%" }}
           contentFit="cover"
+          showLoadingIndicator={true}
         />
         <View className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-3">
           <Text className="text-white text-base font-bold">
@@ -197,10 +203,12 @@ const TripPlanCard = ({ card }: { card: TripCard }) => {
   return (
     <TouchableOpacity className="mr-4">
       <View className="w-40 h-28 rounded-xl overflow-hidden bg-dark-card shadow-sm">
-        <Image
+        <MobileImageComponent
           source={imageSource}
           className="w-full h-full"
+          style={{ width: "100%", height: "100%" }}
           contentFit="cover"
+          showLoadingIndicator={true}
         />
         <View className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-3">
           <Text className="text-white text-sm font-bold">{card.title}</Text>
@@ -642,10 +650,12 @@ const RideshareHome = ({
                 className={`flex-row items-center p-4 mb-2 rounded-lg ${selectedRideType === option.id ? "bg-dark-bg border border-plug-green" : "bg-dark-bg"}`}
                 onPress={() => handleRideSelect(option.id)}
               >
-                <Image
+                <MobileImageComponent
                   source={{ uri: option.image }}
                   className="w-16 h-16 rounded-lg mr-3"
+                  style={{ width: 64, height: 64 }}
                   contentFit="cover"
+                  showLoadingIndicator={true}
                 />
                 <View className="flex-1">
                   <Text className="text-lg font-bold text-white">
@@ -979,10 +989,13 @@ const RideshareHome = ({
           <Text className="text-white font-bold text-lg mb-3">Your Driver</Text>
 
           <View className="flex-row items-center">
-            <Image
+            <MobileImageComponent
               source={{ uri: driverInfo.photoUrl }}
               className="w-16 h-16 rounded-full bg-gray-700"
+              style={{ width: 64, height: 64, borderRadius: 32 }}
+              contentFit="cover"
               transition={500}
+              showLoadingIndicator={true}
             />
             <View className="ml-3 flex-1">
               <Text className="text-white font-medium">{driverInfo.name}</Text>

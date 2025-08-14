@@ -7,7 +7,6 @@ import {
   Dimensions,
   Alert,
 } from "react-native";
-import { Image } from "expo-image";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   MapPin,
@@ -22,6 +21,7 @@ import {
 
 import ServiceDetailsModal from "./ServiceDetailsModal";
 import TechnicianTrackingModal from "./TechnicianTrackingModal";
+import MobileImageComponent from "./MobileImageComponent";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -56,7 +56,13 @@ const ServiceCard = ({ service, onPress }: ServiceCardProps) => {
       className="mr-4 w-48 bg-dark-card rounded-xl overflow-hidden shadow-sm"
       onPress={() => onPress(service)}
     >
-      <Image source={imageSource} className="w-full h-32" contentFit="cover" />
+      <MobileImageComponent
+        source={imageSource}
+        className="w-full h-32"
+        style={{ width: "100%", height: 128 }}
+        contentFit="cover"
+        showLoadingIndicator={true}
+      />
       <View className="p-4">
         <View className="flex-row items-center mb-2">
           {service.icon}

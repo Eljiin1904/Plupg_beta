@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Image } from "expo-image";
 import {
   MapPin,
   ChevronRight,
@@ -48,13 +47,16 @@ interface CategorySectionProps {
   items: RestaurantProps[];
 }
 
+
 const CategoryCard = ({ category }: { category: CategoryProps }) => (
   <TouchableOpacity className="mr-4 w-24">
     <View className="rounded-lg overflow-hidden bg-dark-card">
-      <Image
+      <MobileImageComponent
         source={{ uri: category.image }}
         className="w-24 h-24 rounded-lg"
+        style={{ width: 96, height: 96 }}
         contentFit="cover"
+        showLoadingIndicator={true}
       />
     </View>
     <Text className="text-center mt-1 font-medium text-sm text-white">
@@ -74,14 +76,16 @@ const RestaurantCard = ({
     className="mb-4 bg-dark-card rounded-lg overflow-hidden shadow-sm"
     onPress={() => onPress(restaurant)}
   >
-    <Image
+    <MobileImageComponent
       source={
         typeof restaurant.image === "string"
           ? { uri: restaurant.image }
           : restaurant.image
       }
       className="w-full h-40"
+      style={{ width: "100%", height: 160 }}
       contentFit="cover"
+      showLoadingIndicator={true}
     />
     <View className="p-3">
       <View className="flex-row justify-between items-center">
@@ -583,12 +587,14 @@ const FoodDeliveryHome = ({
 
             {/* Featured Promotion */}
             <TouchableOpacity className="mt-4 mx-4 rounded-lg overflow-hidden">
-              <Image
+              <MobileImageComponent
                 source={{
                   uri: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80",
                 }}
                 className="w-full h-40 rounded-lg"
+                style={{ width: "100%", height: 160 }}
                 contentFit="cover"
+                showLoadingIndicator={true}
               />
               <View className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-4">
                 <Text className="text-white text-xl font-bold">

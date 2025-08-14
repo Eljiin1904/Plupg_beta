@@ -16,6 +16,7 @@ import {
   Image,
   Platform,
 } from "react-native";
+import { images } from '../assets';
 
 type Mode = "food" | "ride";
 type HeaderState = "collapsed" | "expanded";
@@ -155,7 +156,7 @@ const TopHeader = ({
         {/* App Logo */}
         <View style={styles.logoContainer}>
           <Image
-            source={require("../../assets/images/the-plug-logo.jpg")}
+            source={images.plugLogo}
             style={styles.logo}
             resizeMode="contain"
           />

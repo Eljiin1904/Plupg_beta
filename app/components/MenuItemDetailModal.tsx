@@ -3,33 +3,8 @@ import { View, Text, ScrollView, TouchableOpacity, Modal } from "react-native";
 import { Image } from "expo-image";
 import { Plus, Minus, Check } from "lucide-react-native";
 
-export interface MenuItemOption {
-  id: string;
-  name: string;
-  required: boolean;
-  choices: {
-    id: string;
-    name: string;
-    price: number;
-  }[];
-}
-
-export interface MenuItemAddon {
-  id: string;
-  name: string;
-  price: number;
-}
-
-export interface MenuItem {
-  id: string;
-  category_id: string;
-  name: string;
-  description: string;
-  price: number;
-  thumbnail_url: string;
-  options?: MenuItemOption[];
-  addons?: MenuItemAddon[];
-}
+import { MenuItem } from './RestaurantDetailScreen';
+export { MenuItem };
 
 interface MenuItemDetailModalProps {
   visible: boolean;

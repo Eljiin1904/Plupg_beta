@@ -5,6 +5,7 @@ import { View, Text, StyleSheet, Animated } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import MobileImageComponent from "./MobileImageComponent";
+import { images } from '../assets';
 
 interface SplashScreenProps {
   onFinish: () => void;
@@ -65,7 +66,7 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
         className="flex-1 items-center justify-center"
       >
         <MobileImageComponent
-          source={require("../../assets/images/the-plug-logo.jpg")}
+          source={images.plugLogo}
           className="w-96 h-96"
           style={{ width: 384, height: 384 }}
           contentFit="contain"

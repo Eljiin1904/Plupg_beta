@@ -116,7 +116,7 @@ const VideoCard: React.FC<VideoCardProps> = ({
     try {
       const subscription = playerRef.current.addListener(
         "statusChange",
-        ({ status, error }) => {
+        ({ status, error }: { status: string; error?: any }) => {
           if (!isMounted.current) return;
 
           console.log(

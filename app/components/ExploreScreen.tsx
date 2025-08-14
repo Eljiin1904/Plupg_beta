@@ -16,10 +16,10 @@ import {
   User,
 } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Image } from "expo-image";
 import VideoCard from "./VideoCard";
 import mockExploreVideos, { ExploreVideo } from "../data/mockExploreVideos";
 import TopHeader from "./TopHeader";
+import MobileImageComponent from './MobileImageComponent';
 
 interface CategoryProps {
   id: string;
@@ -79,15 +79,30 @@ const BottomNavigation = ({
 const CategoryCard = ({ category }: { category: CategoryProps }) => (
   <TouchableOpacity className="mr-4 w-24">
     <View className="rounded-lg overflow-hidden bg-dark-card">
-      <Image
-        source={{ uri: category.image }}
+      <MobileImageComponent
+        source={category.image} // Can be string or { uri: string }
+        style={{ width: 96, height: 96 }} // Explicit dimensions
         className="w-24 h-24 rounded-lg"
         contentFit="cover"
+        showLoadingIndicator={true}
       />
     </View>
     <Text className="text-center mt-1 font-medium text-sm text-white">
       {category.name}
     </Text>
+  </TouchableOpacity>
+);
+const RestaurantCard = ({ restaurant }: { restaurant: any }) => (
+  <TouchableOpacity className="mr-4">
+    <View className="rounded-lg overflow-hidden">
+      <MobileImageComponent
+        source={restaurant.image}
+        style={{ width: 150, height: 150 }} // Explicit dimensions
+        className="w-36 h-36"
+        contentFit="cover"
+      />
+      {/* Rest of the card */}
+    </View>
   </TouchableOpacity>
 );
 

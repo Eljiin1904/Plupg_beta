@@ -11,13 +11,14 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Star, ShoppingBag, X } from "lucide-react-native";
 import MobileImageComponent from "./MobileImageComponent";
+import { images } from '../assets';
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 interface RestaurantProps {
   id: string;
   name: string;
-  image: string;
+  image: string | number;
   rating: number;
   deliveryTime: string;
   deliveryFee: string;
@@ -29,6 +30,8 @@ interface MenuCategory {
   id: string;
   title: string;
 }
+
+
 
 export interface MenuItemOption {
   id: string;
@@ -47,7 +50,7 @@ export interface MenuItemAddon {
   price: number;
 }
 
-interface MenuItem {
+export interface MenuItem {
   id: string;
   category_id: string;
   name: string;
@@ -66,6 +69,7 @@ interface RestaurantDetailScreenProps {
   onCartPress?: () => void;
 }
 
+
 const MenuItemCard = ({
   item,
   onPress,
@@ -83,9 +87,11 @@ const MenuItemCard = ({
         className="w-24 h-24 rounded-lg"
         style={{ width: 96, height: 96, minHeight: 96 }}
         contentFit="cover"
-        fallbackSource={require("../../assets/carrental.png")}
+        fallbackSource={images.plugLogo}
         cachePolicy="memory-disk"
         transition={200}
+        showLoadingIndicator={true}
+        onError={() => console.log('Failed to load image:', item.thumbnail_url)}
       />
       <View className="flex-1 ml-3 justify-center">
         <Text className="text-white font-bold text-base">{item.name}</Text>
@@ -357,12 +363,15 @@ const RestaurantDetailScreen = ({
           }}
         >
           <MobileImageComponent
-            source={{ uri: restaurant.image }}
+            source={
+              typeof restaurant.image === "string"
+                ? { uri: restaurant.image }
+                : restaurant.image
+            }
             style={{ width: "100%", height: "100%", minHeight: headerHeight }}
             contentFit="cover"
-            fallbackSource={require("../../assets/carrental.png")}
+            fallbackSource={images.plugLogo}
             cachePolicy="memory-disk"
-            priority="high"
             transition={200}
           />
           <View className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black to-transparent" />

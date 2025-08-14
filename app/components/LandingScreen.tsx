@@ -12,6 +12,7 @@ import { useColorScheme } from "nativewind";
 import * as Haptics from "expo-haptics";
 import MobileImageComponent from "./MobileImageComponent";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { images } from '../assets';
 
 interface LandingScreenProps {
   onModeSelect?: (mode: "food" | "ride") => void;
@@ -76,7 +77,7 @@ export default function LandingScreen({
       {/* Logo and App Name */}
       <View className="items-center mb-6">
         <MobileImageComponent
-          source={require("../../assets/images/the-plug-logo.jpg")}
+          source={images.plugLogo}
           className="w-32 h-32 mb-3"
           style={{ width: 384, height: 384 }}
           contentFit="contain"
