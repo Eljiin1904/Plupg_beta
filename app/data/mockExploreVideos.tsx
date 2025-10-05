@@ -28,9 +28,9 @@ export interface ExploreVideo {
 const mockExploreVideos: ExploreVideo[] = [
   {
     id: "v1",
-    // ✅ Updated Burger Video URL from your link
+    // Using sample video URLs that are publicly accessible
     videoUrl:
-      "https://videos.pexels.com/video-files/4131833/4131833-sd_640_360_30fps.mp4",
+      "https://cdn.pixabay.com/video/2020/04/15/36006-409042491_large.mp4",
     thumbnailUrl:
       "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&q=80",
     title: "The perfect burger doesn't exi-",
@@ -56,9 +56,9 @@ const mockExploreVideos: ExploreVideo[] = [
   },
   {
     id: "v2",
-    // ✅ Updated Pizza Video URL from your link
+    // Using sample video URLs that are publicly accessible
     videoUrl:
-      "https://videos.pexels.com/video-files/3752508/3752508-sd_540_960_25fps.mp4",
+      "https://cdn.pixabay.com/video/2020/04/15/36006-409042491_large.mp4",
     thumbnailUrl:
       "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&q=80",
     title: "Pizza perfection in every slice",
@@ -84,9 +84,9 @@ const mockExploreVideos: ExploreVideo[] = [
   },
   {
     id: "v3",
-    // ✅ Updated Donut Video URL from your link
+    // Using sample video URLs that are publicly accessible
     videoUrl:
-      "https://videos.pexels.com/video-files/7033923/7033923-sd_540_960_30fps.mp4",
+      "https://cdn.pixabay.com/video/2020/04/15/36006-409042491_large.mp4",
     thumbnailUrl:
       "https://images.unsplash.com/photo-1551024601-bec78aea704b?w=500&q=80",
     title: "Donut heaven 🍩",
@@ -112,9 +112,9 @@ const mockExploreVideos: ExploreVideo[] = [
   },
   {
     id: "v4",
-    // ✅ Updated Ramen Video URL from your link
+    // Using sample video URLs that are publicly accessible
     videoUrl:
-      "https://videos.pexels.com/video-files/5337023/5337023-sd_640_360_25fps.mp4",
+      "https://cdn.pixabay.com/video/2020/04/15/36006-409042491_large.mp4",
     thumbnailUrl:
       "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=500&q=80",
     title: "Ramen that warms the soul",
@@ -140,9 +140,9 @@ const mockExploreVideos: ExploreVideo[] = [
   },
   {
     id: "v5",
-    // Kept the previous salad video as a new one wasn't provided
+    // Using sample video URLs that are publicly accessible
     videoUrl:
-      "https://videos.pexels.com/video-files/853315/853315-sd_540_960_25fps.mp4",
+      "https://cdn.pixabay.com/video/2020/04/15/36006-409042491_large.mp4",
     thumbnailUrl:
       "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&q=80",
     title: "Healthy eating never looked so good",

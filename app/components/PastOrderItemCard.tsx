@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
-import { Image } from "expo-image";
+import MobileImageComponent from "./MobileImageComponent";
+import { images } from '../assets';
 import { Plus } from "lucide-react-native";
 import { PastItem } from "../api/ordersApi";
 
@@ -35,10 +36,13 @@ const PastOrderItemCard = ({ item, onAddToCart }: PastOrderItemCardProps) => {
 
   return (
     <View className="flex-row p-3 bg-dark-card rounded-lg mb-3">
-      <Image
+      <MobileImageComponent
         source={{ uri: item.imageUrl }}
         className="w-20 h-20 rounded-lg"
+        style={{ width: 80, height: 80 }}
         contentFit="cover"
+        showLoadingIndicator={true}
+        fallbackSource={images.plugLogo}
       />
 
       <View className="flex-1 ml-3 justify-center">

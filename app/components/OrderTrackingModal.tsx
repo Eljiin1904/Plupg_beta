@@ -11,7 +11,8 @@ import {
   Easing,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Image } from "expo-image";
+import MobileImageComponent from "./MobileImageComponent";
+import { images } from '../assets';
 import {
   X,
   Phone,
@@ -575,12 +576,16 @@ const OrderTrackingModal = ({
               </Text>
 
               <View className="flex-row items-center">
-                <Image
+                <MobileImageComponent
                   source={{
                     uri: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80",
                   }}
                   className="w-16 h-16 rounded-full bg-gray-700"
+                  style={{ width: 64, height: 64, borderRadius: 32 }}
+                  contentFit="cover"
                   transition={500}
+                  showLoadingIndicator={true}
+                  fallbackSource={images.plugLogo}
                 />
                 <View className="ml-3 flex-1">
                   <Text className="text-white font-medium">

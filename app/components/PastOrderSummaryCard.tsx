@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
-import { Image } from "expo-image";
 import { Clock, ChevronRight, RotateCcw, Store } from "lucide-react-native";
 import { PastOrder } from "../api/ordersApi";
 

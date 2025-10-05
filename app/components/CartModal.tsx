@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Image } from "expo-image";
+import MobileImageComponent from "./MobileImageComponent";
 import {
   X,
   Minus,
@@ -157,10 +157,12 @@ const CartModal = ({
                     className="flex-row mb-4 pb-4 border-b border-gray-800"
                   >
                     {item.thumbnail_url && (
-                      <Image
+                      <MobileImageComponent
                         source={{ uri: item.thumbnail_url }}
                         className="w-20 h-20 rounded-lg"
+                        style={{ width: 80, height: 80 }}
                         contentFit="cover"
+                        showLoadingIndicator={true}
                       />
                     )}
                     <View className="flex-1 ml-3">

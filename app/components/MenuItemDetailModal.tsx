@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Modal } from "react-native";
-import { Image } from "expo-image";
 import { Plus, Minus, Check } from "lucide-react-native";
+import MobileImageComponent from "./MobileImageComponent";
+import { images } from '../assets';
 
 import { MenuItem } from './RestaurantDetailScreen';
 export { MenuItem };
@@ -126,10 +127,13 @@ const MenuItemDetailModal = ({
 
           <ScrollView className="px-4 pb-24">
             {/* Item image */}
-            <Image
+            <MobileImageComponent
               source={{ uri: item.thumbnail_url }}
               className="w-full h-48 rounded-lg"
+              style={{ width: "100%", height: 192 }}
               contentFit="cover"
+              showLoadingIndicator={true}
+              fallbackSource={images.plugLogo}
             />
 
             {/* Item details */}

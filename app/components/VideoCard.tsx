@@ -38,6 +38,7 @@ const VideoCard: React.FC<VideoCardProps> = ({
   const [isMuted, setIsMuted] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [isVideoReady, setIsVideoReady] = useState(false);
+  const [videoError, setVideoError] = useState(false);
   const isMounted = useRef(true);
   const playerRef = useRef<any>(null);
   const isInitialMount = useRef(true);
@@ -143,6 +144,7 @@ const VideoCard: React.FC<VideoCardProps> = ({
               console.error("Player error for video:", video.id, error);
               setIsLoading(false);
               setIsVideoReady(false);
+              setVideoError(true);
               break;
 
             default:
@@ -197,8 +199,8 @@ const VideoCard: React.FC<VideoCardProps> = ({
 
   return (
     <View style={styles.container}>
-      {/* Show thumbnail until video is ready and active */}
-      {(!isActive || !isVideoReady) && (
+      {/* Show thumbnail until video is ready and active, or if there's an error */}
+      {(!isActive || !isVideoReady || videoError) && (
         <Image
           style={styles.poster}
           source={{ uri: video.thumbnailUrl }}
@@ -206,8 +208,8 @@ const VideoCard: React.FC<VideoCardProps> = ({
         />
       )}
 
-      {/* Only render video if this card is active */}
-      {isActive && (
+      {/* Only render video if this card is active and no error */}
+      {isActive && !videoError && (
         <VideoView
           player={player}
           style={[styles.video, { opacity: isVideoReady ? 1 : 0 }]}
@@ -217,10 +219,22 @@ const VideoCard: React.FC<VideoCardProps> = ({
       )}
 
       {/* Loading indicator */}
-      {isActive && isLoading && (
+      {isActive && isLoading && !videoError && (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#FFFFFF" />
         </View>
+      )}
+
+      {/* Error indicator */}
+      {videoError && (
+        <TouchableOpacity 
+          style={styles.errorContainer}
+          onPress={() => onOrderNow(video.restaurant.id)}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.errorText}>Video unavailable</Text>
+          <Text style={styles.errorSubtext}>Tap to order from {video.restaurant.name}</Text>
+        </TouchableOpacity>
       )}
 
       {/* UI Overlay */}
@@ -430,6 +444,23 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
     padding: 8,
     borderRadius: 20,
+  },
+  errorContainer: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 2,
+    backgroundColor: "rgba(0,0,0,0.3)",
+  },
+  errorText: {
+    color: "#FFFFFF",
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+  errorSubtext: {
+    color: "#CCCCCC",
+    fontSize: 14,
   },
 });
 

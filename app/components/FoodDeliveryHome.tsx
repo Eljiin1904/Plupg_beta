@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import {
   MapPin,
   ChevronRight,
@@ -178,7 +177,7 @@ const CategorySection = ({
   section: CategorySectionProps;
   onSelectRestaurant: (r: RestaurantProps) => void;
 }) => (
-  <View className="mt-6">
+  <View className="mt-4">
     <Text className="text-lg font-bold mb-3 text-white px-4">
       {section.title}
     </Text>
@@ -543,7 +542,7 @@ const FoodDeliveryHome = ({
           onViewRestaurant={handleViewRestaurant}
         />
       ) : (
-        <SafeAreaView className="flex-1 bg-dark-bg">
+        <View className="flex-1 bg-dark-bg">
           <TopHeader
             mode="food"
             onModeToggle={(mode) => {
@@ -605,7 +604,7 @@ const FoodDeliveryHome = ({
             </TouchableOpacity>
 
             {/* Category Sections with Horizontal Scroll */}
-            <View className="pb-20">
+            <View className="pb-0">
               {categorySections.map((section) => (
                 <CategorySection
                   key={section.id}
@@ -674,7 +673,7 @@ const FoodDeliveryHome = ({
 
           {/* Floating Cart Button */}
           <TouchableOpacity
-            className="absolute bottom-20 right-5 bg-plug-green p-4 rounded-full shadow-lg"
+            className="absolute bottom-24 right-4 bg-plug-green p-4 rounded-full shadow-lg"
             onPress={() => setShowCart(true)}
           >
             <ShoppingBag size={24} color="#FFFFFF" />
@@ -684,7 +683,7 @@ const FoodDeliveryHome = ({
               </View>
             )}
           </TouchableOpacity>
-        </SafeAreaView>
+        </View>
       )}
 
       {/* Other Modals */}
